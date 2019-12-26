@@ -1,2 +1,3 @@
-# flask-api-cookiecutter
-(WIP) A simple flask API cookiecutter template.
+# {{cookiecutter.app_name}}
+
+Developed by: {{cookiecutter.author}}

@@ -1,0 +1,11 @@
+version: '3.7'
+services:
+  flask:
+    image: {{cookiecutter.app_name}}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/{{cookiecutter.app_name}}
+    ports:
+      - "5000:5000"
