@@ -19,9 +19,9 @@ class APITestCases(unittest.TestCase):
         with self.app.test_client() as c:
             r = c.get(f"/{data}")
 
-        assert r.status_code == 200
-        assert json.loads(r.data) == {"name": data}
-        assert json.loads(r.data)["name"] == data
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(json.loads(r.data), {"name": data})
+        self.assertEqual(json.loads(r.data)["name"], data)
 
     def test_name_with_spaces(self) -> None:
         data = "Hello, World"
@@ -29,9 +29,9 @@ class APITestCases(unittest.TestCase):
         with self.app.test_client() as c:
             r = c.get(f"/{data}")
 
-        assert r.status_code == 200
-        assert json.loads(r.data) == {"name": data}
-        assert json.loads(r.data)["name"] == data
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(json.loads(r.data), {"name": data})
+        self.assertEqual(json.loads(r.data)["name"], data)
 
     def test_name_with_emoji(self) -> None:
         data = "Hello from Singapore 😀🇸🇬"
@@ -39,6 +39,10 @@ class APITestCases(unittest.TestCase):
         with self.app.test_client() as c:
             r = c.get(f"/{data}")
 
-        assert r.status_code == 200
-        assert json.loads(r.data) == {"name": data}
-        assert json.loads(r.data)["name"] == data
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(json.loads(r.data), {"name": data})
+        self.assertEqual(json.loads(r.data)["name"], data)
+
+
+if __name__ == '__main__':
+    unittest.main()

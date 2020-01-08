@@ -1,0 +1,107 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: {{cookiecutter.app_name}}
+  name: {{cookiecutter.app_name}}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{cookiecutter.app_name}}
+  template:
+    metadata:
+      labels:
+        app: {{cookiecutter.app_name}}
+    spec:
+      containers:
+      - image: docker.apple.com/{{cookiecutter.ldap_id}}/{{cookiecutter.app_name}}
+        name: {{cookiecutter.app_name}}
+        ports:
+        - containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 5
+          timeoutSeconds: 30
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 10m
+            memory: 32Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{cookiecutter.app_name}}
+  labels:
+    app: {{cookiecutter.app_name}}
+spec:
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: {{cookiecutter.app_name}}
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{cookiecutter.app_name}}
+  annotations:
+    kubernetes.io/ingress.class: netscaler.v2
+    netscaler.applecloud.io/insecure-backend: "true"
+spec:
+  backend:
+    serviceName: {{cookiecutter.app_name}}
+    servicePort: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: whitelist-snip-{{cookiecutter.app_name}}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{cookiecutter.app_name}}
+  ingress:
+  - from:
+    - ipBlock:
+        cidr: "10.140.155.0/27"
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-netpolicy
+spec:
+  policyTypes:
+    - Ingress
+  ingress:
+    - ports:
+        - protocol: TCP
+          port: 443
+  podSelector:
+    matchLabels:
+      role: frontend
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: egress-netpolicy
+spec:
+  policyTypes:
+    - Egress
+  egress:
+    - ports:
+        - protocol: TCP
+          port: 1521
+      to:
+        - ipBlock:
+            cidr: 10.140.150.101/32
+  podSelector:
+    matchLabels:
+      role: frontend

@@ -11,6 +11,7 @@ pylint = "*"
 mypy = "*"
 flake8 = "*"
 requests = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.8"

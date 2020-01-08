@@ -1,4 +1,5 @@
 {
     "app_name": "helloworld",
-    "author": "Medwin Tan"
+    "author": "Medwin Tan",
+    "ldap_id": "medwintan"
 }
