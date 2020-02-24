@@ -1,3 +1,3 @@
 # {{cookiecutter.app_name}}
 
-Developed by: Medwin
+Developed by: {{cookiecutter.author}}
